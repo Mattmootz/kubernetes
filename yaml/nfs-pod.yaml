@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: timepod
+  labels:
+    name: timepod
+spec:
+  containers:
+  - name: timepod
+    image: busybox
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo current time is $(date +'%T') > /tmp/time.txt; sleep 5; done"] 
+    volumeMounts:
+    - name: nfsvol
+      mountPath: /tmp/
+  restartPolicy: Always
+  securityContext:
+    fsGroup: 65534
+    runAsUser: 65534
+  volumes:
+    - name: nfsvol
+      persistentVolumeClaim:
+        claimName: nfs-claim-01 
+    
